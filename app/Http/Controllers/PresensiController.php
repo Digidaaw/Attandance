@@ -4,15 +4,20 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
-use App\Models\Presensi;
+use App\Models\presensi;
 
 class PresensiController extends Controller
 {
     public function index()
     {
-        $presensi = Presensi::all();
+        $presensi = presensi::all();
         $user = User::all();
         return view('presensi.index', compact('presensi'));
+    }
+
+    public function show()
+    {
+    return redirect()->route('presensi.index');
     }
 
     public function create()
@@ -28,7 +33,8 @@ class PresensiController extends Controller
             'jam_keluar' => 'required|date_format:H:i',
         ]);
 
-        Presensi::create($validated);
+        $validated['user_id'] = auth()->id();
+        $presensi = Presensi::create($validated);
 
         return redirect()->route('presensi.index')->with('success', 'Presensi berhasil ditambahkan');
     }
@@ -46,6 +52,8 @@ class PresensiController extends Controller
             'jam_masuk' => 'required|date_format:H:i',
             'jam_keluar' => 'required|date_format:H:i',
         ]);
+
+        dd($validated);
 
         $presensi = Presensi::findOrFail($id);
         $presensi->update($validated);
