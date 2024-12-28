@@ -33,7 +33,9 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     Route::get('/presensi', [PresensiController::class, 'index'])->name('admin.presensi.index');
     Route::delete('/presensi/{id}', [PresensiController::class, 'destroy'])->name('presensi.destroy');
     Route::get('/izin', [IzinController::class, 'index'])->name('admin.izin.index');
+    Route::delete('/izin/{id}', [IzinController::class, 'destroy'])->name('izin.destroy');
     Route::get('/lembur', [LemburController::class, 'index'])->name('admin.lembur.index');
+    Route::delete('/lembur/{id}', [LemburController::class, 'destroy'])->name('lembur.destroy');
 });
 
 Route::middleware(['auth', 'role:karyawan'])->group(function () {

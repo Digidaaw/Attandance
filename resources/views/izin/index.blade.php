@@ -16,9 +16,11 @@
                   <tr>
                     <th class="px-6 py-4">No</th>
                     <th class="px-6 py-4">User</th>
-                    <th class="px-6 py-4">Tanggal</th>
-                    <th class="px-6 py-4">Jam Masuk</th>
-                    <th class="px-6 py-4">Jam Keluar</th>
+                    <th class="px-6 py-4">Jenis Izin</th>
+                    <th class="px-6 py-4">Tanggal Mulai</th>
+                    <th class="px-6 py-4">Tanggal Selesai</th>
+                    <th class="px-6 py-4">Alasan</th>
+                    <th class="px-6 py-4">Status</th>
                     <th class="px-6 py-4">Actions</th>
                   </tr>
                 </thead>
@@ -27,9 +29,11 @@
                   <tr class="bg-white border-b hover:bg-gray-50">
                     <td class="px-6 py-4">{{ $izin->id }}</td>
                     <td class="px-6 py-4">{{ $izin->user_id }}</td>
-                    <td class="px-6 py-4">{{ $izin->tanggal }}</td>
-                    <td class="px-6 py-4">{{ $izin->jam_masuk }}</td>
-                    <td class="px-6 py-4">{{ $izin->jam_keluar }}</td>
+                    <td class="px-6 py-4">{{ $izin->jenis_izin }}</td>
+                    <td class="px-6 py-4">{{ $izin->tanggal_mulai }}</td>
+                    <td class="px-6 py-4">{{ $izin->tanggal_selesai }}</td>
+                    <td class="px-6 py-4">{{ $izin->alasan }}</td>
+                    <td class="px-6 py-4">{{ $izin->status }}</td>
                     <td class="px-6 py-4 flex gap-2">
                       {{-- <a href="{{ route('presensi.edit', $presensi->id) }}" 
                          class="px-4 py-2 bg-blue-500 text-white  hover:bg-white duration-300 hover:text-blue-600 rounded 

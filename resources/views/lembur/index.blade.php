@@ -29,8 +29,8 @@
                     <td class="px-6 py-4">{{ $lembur->id }}</td>
                     <td class="px-6 py-4">{{ $lembur->user_id }}</td>
                     <td class="px-6 py-4">{{ $lembur->tanggal }}</td>
-                    <td class="px-6 py-4">{{ $lembur->jam_masuk }}</td>
-                    <td class="px-6 py-4">{{ $lembur->jam_keluar }}</td>
+                    <td class="px-6 py-4">{{ $lembur->jam_mulai }}</td>
+                    <td class="px-6 py-4">{{ $lembur->jam_selesai }}</td>
                     <td class="px-6 py-4">{{ $lembur->keterangan }}</td>
                     <td class="px-6 py-4 flex gap-2">
                       {{-- <a href="{{ route('presensi.edit', $presensi->id) }}" 
