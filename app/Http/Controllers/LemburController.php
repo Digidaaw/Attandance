@@ -10,7 +10,7 @@ class LemburController extends Controller
 {
     public function index()
     {
-        $lembur = Lembur::all();
+        $lembur = lembur::all();
         $user = User::all();
         return view('lembur.index', compact('lembur'));
     }
@@ -23,21 +23,23 @@ class LemburController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'user_id' => 'required|exists:users,id',
             'tanggal' => 'required|date',
             'jam_mulai' => 'required|date_format:H:i',
             'jam_selesai' => 'required|date_format:H:i',
             'keterangan' => 'required',
         ]);
+        
 
-        Lembur::create($validated);
+        $validated['user_id'] = auth()->id();
 
-        return redirect()->route('lembur.index')->with('success', 'Lembur berhasil ditambahkan');
+        lembur::create($validated);
+
+        return redirect()->route('karyawan.lembur.create')->with('success', 'Lembur berhasil ditambahkan');
     }
 
     public function edit($id)
     {
-        $lembur = Lembur::findOrFail($id);
+        $lembur = lembur::findOrFail($id);
         return view('lembur.edit', compact('lembur'));
     }
 
@@ -51,7 +53,7 @@ class LemburController extends Controller
             'keterangan' => 'required',
         ]);
 
-        $lembur = Lembur::findOrFail($id);
+        $lembur = lembur::findOrFail($id);
         $lembur->update($validated);
 
         return redirect()->route('lembur.index')->with('success', 'Lembur berhasil diubah');
@@ -59,7 +61,7 @@ class LemburController extends Controller
 
     public function destroy($id)
     {
-        $lembur = Lembur::findOrFail($id);
+        $lembur = lembur::findOrFail($id);
         $lembur->delete();
 
         return redirect()->route('lembur.index')->with('success', 'lembur berhasil dihapus');
