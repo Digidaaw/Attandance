@@ -4,14 +4,15 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
-use App\Models\Izin;
+use App\Models\izin;
 
 class IzinController extends Controller
 {
     public function index()
     {
-        $izin = Izin::all();
+        $izin = Izin::with('user')->get();
         $user = User::all();
+        $izin = Izin::with('user')->get();
         return view('izin.index', compact('izin'));
     }
 
@@ -23,45 +24,80 @@ class IzinController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'user_id' => 'required|exists:users,id',
-            'tanggal' => 'required|date',
-            'jam_mulai' => 'required|date_format:H:i',
-            'jam_selesai' => 'required|date_format:H:i',
-            'keterangan' => 'required',
+            'jenis_izin' => 'required|in:sakit,cuti,lainnya',
+            'tanggal_mulai' => 'required|date|before_or_equal:tanggal_selesai',
+            'tanggal_selesai' => 'required|date|after_or_equal:tanggal_mulai',
+            'alasan' => 'required|max:255',
+            'status' => 'required|in:pending,approved,declined'
+        ], [
+            'jenis_izin.required' => 'Jenis izin wajib diisi.',
+            'jenis_izin.in' => 'Jenis izin tidak valid.',
+            'tanggal_mulai.required' => 'Tanggal mulai cuti wajib diisi.',
+            'tanggal_mulai.before_or_equal' => 'Tanggal mulai harus sebelum atau sama dengan tanggal selesai.',
+            'tanggal_selesai.required' => 'Tanggal selesai cuti wajib diisi.',
+            'tanggal_selesai.after_or_equal' => 'Tanggal selesai harus setelah atau sama dengan tanggal mulai.',
+            'alasan.required' => 'Alasan cuti wajib diisi.',
+            'alasan.max' => 'Alasan tidak boleh lebih dari 255 karakter.',
+            'status.required' => 'Status wajib diisi.',
+            'status.in' => 'Status tidak valid.'
         ]);
 
-        Izin::create($validated);
+        $validated['user_id'] = auth()->id();
 
-        return redirect()->route('izin.index')->with('success', 'Izin berhasil ditambahkan');
+        try {
+            izin::create($validated);
+            return redirect()->route('izin.index')->with('success', 'Izin berhasil ditambahkan');
+        } catch (\Exception $e) {
+            return back()->withErrors('Terjadi kesalahan saat menyimpan izin. Silakan coba lagi.');
+        }
     }
 
     public function edit($id)
     {
-        $izin = Izin::findOrFail($id);
+        $izin = izin::findOrFail($id);
         return view('izin.edit', compact('izin'));
     }
 
     public function update(Request $request, $id)
     {
         $validated = $request->validate([
-            'user_id' => 'required|exists:users,id',
-            'tanggal' => 'required|date',
-            'jam_mulai' => 'required|date_format:H:i',
-            'jam_selesai' => 'required|date_format:H:i',
-            'keterangan' => 'required',
+            'jenis_izin' => 'required|in:sakit,cuti,lainnya',
+            'tanggal_mulai' => 'required|date|before_or_equal:tanggal_selesai',
+            'tanggal_selesai' => 'required|date|after_or_equal:tanggal_mulai',
+            'alasan' => 'required|max:255',
+            'status' => 'required|in:pending,approved,declined'
+        ], [
+            'jenis_izin.required' => 'Jenis izin wajib diisi.',
+            'jenis_izin.in' => 'Jenis izin tidak valid.',
+            'tanggal_mulai.required' => 'Tanggal mulai cuti wajib diisi.',
+            'tanggal_mulai.before_or_equal' => 'Tanggal mulai harus sebelum atau sama dengan tanggal selesai.',
+            'tanggal_selesai.required' => 'Tanggal selesai cuti wajib diisi.',
+            'tanggal_selesai.after_or_equal' => 'Tanggal selesai harus setelah atau sama dengan tanggal mulai.',
+            'alasan.required' => 'Alasan cuti wajib diisi.',
+            'alasan.max' => 'Alasan tidak boleh lebih dari 255 karakter.',
+            'status.required' => 'Status wajib diisi.',
+            'status.in' => 'Status tidak valid.'
         ]);
 
-        $izin = Izin::findOrFail($id);
-        $izin->update($validated);
+        $izin = izin::findOrFail($id);
 
-        return redirect()->route('izin.index')->with('success', 'Izin berhasil diubah');
+        try {
+            $izin->update($validated);
+            return redirect()->route('admin.izin.index')->with('success', 'Izin berhasil diubah');
+        } catch (\Exception $e) {
+            return back()->withErrors('Terjadi kesalahan saat memperbarui izin. Silakan coba lagi.');
+        }
     }
 
     public function destroy($id)
     {
-        $izin = Izin::findOrFail($id);
-        $izin->delete();
+        $izin = izin::findOrFail($id);
 
-        return redirect()->route('izin.index')->with('success', 'izin berhasil dihapus');
+        try {
+            $izin->delete();
+            return redirect()->route('admin.izin.index')->with('success', 'Izin berhasil dihapus');
+        } catch (\Exception $e) {
+            return back()->withErrors('Terjadi kesalahan saat menghapus izin. Silakan coba lagi.');
+        }
     }
 }

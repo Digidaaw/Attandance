@@ -13,16 +13,16 @@ class DashboardController extends Controller
 
     public function inputKehadiran()
     {
-        return view('dashboard.input-kehadiran');
+        return view('presensi.create');
     }
 
     public function inputIzin()
     {
-        return view('dashboard.input-izin');
+        return view('izin.create');
     }
 
     public function inputLembur()
     {
-        return view('dashboard.input-lembur');
+        return view('lembur.create');
     }
 }
